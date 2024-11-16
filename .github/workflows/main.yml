@@ -4,10 +4,10 @@ on: [push, workflow_dispatch]
 
 jobs:
   build:
-
     runs-on: windows-latest
 
     steps:
+    # Step untuk mengunduh dan menginstal ngrok seperti yang sudah ada
     - name: Download
       run: Invoke-WebRequest https://bin.equinox.io/c/bNyj1mQVY4c/ngrok-v3-stable-windows-amd64.zip -OutFile ngrok.zip
     - name: Extract
@@ -17,9 +17,26 @@ jobs:
       env:
         NGROK_AUTH_TOKEN: ${{ secrets.NGROK_AUTH_TOKEN }}
     - name: Enable TS
-      run: Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server'-name "fDenyTSConnections" -Value 0
+      run: Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server' -name "fDenyTSConnections" -Value 0
     - run: Enable-NetFirewallRule -DisplayGroup "Remote Desktop"
     - run: Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp' -name "UserAuthentication" -Value 1
     - run: Set-LocalUser -Name "runneradmin" -Password (ConvertTo-SecureString -AsPlainText "P@ssw0rd!" -Force)
     - name: Create Tunnel
       run: .\ngrok\ngrok.exe tcp 3389
+
+    # Step untuk menginstal Python
+    - name: Setup Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.13.0' # Pilih versi Python yang diinginkan
+
+    # Step untuk menginstal VSCode (opsional jika hanya perlu Python dan pip)
+    - name: Install Visual Studio Code
+      run: |
+        choco install vscode -y
+
+    # Step untuk menginstal module pip yang diinginkan
+    - name: Install Python Modules
+      run: |
+        python -m pip install --upgrade pip
+        pip install <nama_module_anda> # Ganti dengan modul spesifik seperti requests, numpy, dll.
