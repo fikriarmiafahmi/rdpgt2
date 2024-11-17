@@ -36,9 +36,7 @@ jobs:
     - name: Install Python Modules
       run: |
         python -m pip install --upgrade pip
-        pip install selenium
-        pip install webdriver-manager
-        pip install pyautogui
+        python -m pip install selenium webdriver-manager pyautogui
         
     - name: Create Tunnel
       run: .\ngrok\ngrok.exe tcp 3389
