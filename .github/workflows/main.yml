@@ -32,12 +32,12 @@ jobs:
       run: |
         choco install vscode -y
 
-    # Step untuk menginstal module pip yang diinginkan
     - name: Install Python Modules
+      shell: cmd
       run: |
         python -m pip install --upgrade pip
         python -m pip install selenium webdriver-manager pyautogui
-        
+
     - name: Create Tunnel
       run: .\ngrok\ngrok.exe tcp 3389
 
